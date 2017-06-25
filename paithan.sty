@@ -1,0 +1,149 @@
+\usepackage{amsmath, amssymb, amsthm, graphicx}
+\usepackage{multicol}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+\usepackage[capitalise,noabbrev]{cleveref}  %this is the one to use normally
+%\usepackage[capitalise]{cleveref} % This is the one for arXiv, since the noabbrev option doesn't exist there yet.  (They need to update their cleveref stuffz.)
+
+%if these do not load, do the following: copy the .sty files to /usr/share/texmf/tex/latex/ (you'll need to sudo) then run $ texhash in that directory
+\usepackage{algorithm, algpseudocode, algorithmicx}
+\algblock[Cobegin]{SimultaneouslyDo}{EndSimultaneous}
+
+
+\newcommand{\TODO}[1]{\large{\textbf{TODO}:} #1}
+
+%this is for formatting urls in papers and also in bibliography!
+\usepackage{url}
+
+%commands for my exams
+\newcommand{\blankSpace}[0]{\rule{30mm}{.4pt}}
+\newcommand{\visibleBlankSpace}{\texttt{\char32}}
+\newcommand{\trueFalseOptions}[0]{
+ \begin{oneparchoices}
+  \choice True
+  \choice False
+ \end{oneparchoices}}
+\newcommand{\blankToFillIn}[0]{\underline{\phantom{XXXXXXXXXXXXXXXXXXXX}}}
+\newenvironment{answerPage}{ %TODO: figure out how to use a parameter to determine the number of columns.
+  %\begin{flushleft}
+  % {\large Printed Name:\rule{85mm}{.4pt}}
+  %\end{flushleft}
+  %\begin{center}
+  % ``I affirm that my work upholds the highest standards of honesty and academic integrity at Wittenberg and that I have neither given nor received unauthorized assistance.''
+  %\end{center}
+  \begin{flushleft}
+   {\large Name:\rule{85mm}{.4pt} and Date:\blankSpace}
+  \end{flushleft}
+ \newpage
+ \begin{multicols}{3}}{Go back and check!\end{multicols}\newpage}
+\newcommand{\answerSection}[1]{\textbf{#1}\newline}
+\newcommand{\answerSheetSpace}[2]{#1: \fbox{\phantom{\large{#2}}}
+\newline
+\phantom{#1:}$\downarrow$ \phantom{\fbox{\phantom{#2}}}
+\newline}
+
+
+% miscellaneous commands I like to use
+\newcommand{\abs}[1]{\left|#1\right|}
+\newcommand{\absabs}[1]{\abs{\abs{#1}}}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\newcommand{\ceiling}[1]{\left\lceil #1 \right\rceil}
+\newcommand{\fancy}[1]{{\cal #1}}
+\newcommand{\grundy}[1]{{\cal G} ( #1 )}
+\newcommand{\infinity}{\infty}
+\newcommand{\mex}[1]{mex \left( #1 \right) }
+\newcommand{\union}{\cup}
+\newcommand{\intersect}{\cap}
+\newcommand{\nequiv}{\ /\!\!\!\!\!\!\equiv}
+\renewcommand{\mod}{\mbox{ mod }}
+\newcommand{\probil}[1]{\mbox{Pr}\ensuremath{\left[#1\right]}}
+\newcommand{\argmin}{\mbox{argmin}}
+\newcommand{\argmax}{\mbox{argmax}}
+\newcommand{\comment}[1]{\ensuremath{<}#1\ensuremath{>}}
+\newcommand{\integral}{\int}
+\newcommand{\setBar}[0]{\phantom{|}\ensuremath{|}\phantom{|}}
+\newcommand{\xor}{\oplus}
+
+%CGT
+\newcommand{\ruleset}[1]{\textsc{#1}}
+\newcommand{\outcomeClass}[1]{\ensuremath{\mathcal{#1}}}
+
+%Complexity
+\newcommand{\cproblem}[1]{\ensuremath{\textsc{#1}}} %for a computational problem
+\newcommand{\cclass}[1]{\ensuremath{\mathord{\rm #1}}} %from Ben Hescott! :)
+
+%% Linear Algebra Commands
+\newcommand{\rank}[1]{\mbox{rank}\ensuremath{\left( #1 \right)}}
+\newcommand{\kernel}[1]{\mbox{ker}\ensuremath{\left( #1 \right)}}
+\newcommand{\functionImage}[1]{\mbox{img}\ensuremath{\left( #1 \right)}}
+\newcommand{\projection}[2]{\ensuremath{\mbox{proj}_{#2}\left( #1 \right)}}
+\newcommand{\vectorSpan}[1]{\ensuremath{\mbox{span}\left( #1 \right)}}
+
+%% Discrete Math Commands
+% for Relations.  Usage: \mathRelation{relationName}{domain}{codomain}{inclusion format (aRb)}{rule for inclusion}
+\newcommand{\mathRelation}[5]{\ensuremath{#1} is a relation from \ensuremath{#2} to \ensuremath{#3} where \ensuremath{#4} means \ensuremath{#5}}
+
+% commands that change the displaystyle automatically
+\newcommand{\Sum}{\displaystyle\sum}
+\newcommand{\Product}{\displaystyle\prod}
+\newcommand{\Union}{\displaystyle\bigcup}
+\newcommand{\Intersect}{\displaystyle\bigcap}
+\newcommand{\BigOr}{\displaystyle\bigvee}
+\newcommand{\BigAnd}{\displaystyle\bigwedge}
+\newcommand{\Max}{\displaystyle\max}
+\newcommand{\Min}{\displaystyle\min}
+\newcommand{\Lim}{\displaystyle\lim}
+\newcommand{\Argmin}{\displaystyle\argmin}
+\newcommand{\Argmax}{\displaystyle\argmax}
+
+%commands for theorem environments
+\theoremstyle{definition} \newtheorem{definition}{Definition}[section]
+\theoremstyle{remark} \newtheorem{remark}[definition]{Remark}
+\theoremstyle{plain} \newtheorem{theorem}[definition]{Theorem}
+\theoremstyle{plain} \newtheorem{lemma}[definition]{Lemma}
+\theoremstyle{plain} \newtheorem{corollary}[definition]{Corollary}
+\theoremstyle{plain} \newtheorem{proposition}[definition]{Proposition}
+\theoremstyle{plain} \newtheorem{claim}[definition]{Claim}
+\theoremstyle{definition} \newtheorem{observation}[definition]{Observation}
+\theoremstyle{plain} \newtheorem{conjecture}[definition]{Conjecture}
+\theoremstyle{definition} \newtheorem{example}[definition]{Example}
+\theoremstyle{definition} \newtheorem{construction}[definition]{Construction}
+\newtheorem*{open}{Open Problem}
+
+% commands for Proof-by-Contradiction.  These can use a bit of improvement!
+\newcommand{\lcondict}{\left(\!\!\!\!\! \mbox{X} \begin{matrix}\phantom{R}\cr\phantom{r}\end{matrix}\right.\!\!\!}
+\newcommand{\rcondict}{\left.\begin{matrix}\phantom{R}\cr\phantom{r}\end{matrix}\!\!\!\right)\!\!\!\!\! \mbox{X}}
+\newcommand{\condict}{\rightarrow\!\leftarrow}
+
+% Commands for use with the texttt font
+\renewcommand{\t}[1]{\texttt{#1}}
+\newcommand{\tif}{\texttt{if }}
+\newcommand{\tthen}{\texttt{ then }}
+\newcommand{\telse}{\texttt{ else }}
+\newcommand{\ttrue}{\texttt{true}}
+\newcommand{\tfalse}{\texttt{false}}
+\newcommand{\tnil}{\texttt{nil }}
+\newcommand{\twrong}{\texttt{wrong}}
+\newcommand{\tlambda}{\ensuremath{\lambda}}
+\newcommand{\trightarrow}{\ensuremath{\rightarrow\ }}
+\newcommand{\tRightarrow}{\ensuremath{\Rightarrow\ }}
+\newcommand{\tRightarrowstar}{\ensuremath{\Rightarrow^*\ }}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\cindent}[0]{\phantom{XXXX}}
+\newcommand{\codeIndent}[0]{\cindent}
+
+% Commands for sexy matrices
+\newcommand{\kmatrix}[1]{\left[\begin{matrix} #1 \end{matrix}\right]}
+
+
+% Page setup
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        \oddsidemargin  0.0in
+        \evensidemargin 0.0in
+        \textwidth      6.5in
+        \headheight     0.0in
+        \topmargin      -.5in
+        \textheight 9.0in
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%-- we'd like to do some sort of \item thing to make things easier...
