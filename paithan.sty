@@ -1,4 +1,5 @@
 \usepackage{amsmath, amssymb, amsthm, graphicx}
+\usepackage{multido, arrayjob, ifthen} %arrays, etc, for the multiSlideItems command
 \usepackage{multicol}
 \usepackage{url}
 \usepackage[hidelinks]{hyperref} %hyperref needs to come before cleveref, but you may need to import them again inside the actual document
@@ -12,8 +13,25 @@
 
 \newcommand{\TODO}[1]{\large{\textbf{TODO}:} #1}
 
-%this is for formatting urls in papers and also in bibliography!
-\usepackage{url}
+
+%command for multi-slide lists in beamer
+%usage: \multiSlideItems{SlidesTitle}{Pre-listContent}{listLength}{List-as-&-separatedArray}{Post-listContent}
+\newcommand{\multiSlideItems}[]{
+\newarray\SlideItems
+\readarray{SlideItems}{#4}
+\multido{\i=1+1}{#3}{%
+    {\begin{frame}
+        \frametitle{#1}
+        #2
+        {\begin{itemize}
+            {\multido{\ii=1+1}{#3}{%
+                \ifthenelse{\i<\ii}{\item}{\item \SlideItems(\ii)}}}
+        \end{itemize}
+        \ifthenelse{\i<#3}{}{#5}}
+    \end{frame}}}
+}
+
+
 
 %commands for my exams
 \newcommand{\blankSpace}[0]{\rule{30mm}{.4pt}}
