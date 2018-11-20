@@ -1,5 +1,6 @@
 \usepackage{amsmath, amssymb, amsthm, graphicx}
-\usepackage{multido, arrayjob, ifthen} %arrays, etc, for the multiSlideItems command
+%\usepackage{multido, arrayjob, ifthen} %removed this version because it broke the cases environment!
+\usepackage{multido, ifthen} %arrays, etc, for the multiSlideItems command
 \usepackage{multicol}
 \usepackage{url}
 %\usepackage[hidelinks]{hyperref} %hyperref needs to come before cleveref, but you may need to import them again inside the actual document
@@ -147,11 +148,10 @@
 \newcommand{\tRightarrow}{\ensuremath{\Rightarrow\ }}
 \newcommand{\tRightarrowstar}{\ensuremath{\Rightarrow^*\ }}
 \newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\codeBlock}[1]{\noindent\texttt{#1}}
 \newcommand{\cindent}[0]{\phantom{XXXX}}
 \newcommand{\codeIndent}[0]{\cindent}
 
 % Commands for sexy matrices
 \newcommand{\kmatrix}[1]{\left[\begin{matrix} #1 \end{matrix}\right]}
 
-
-%-- we'd like to do some sort of \item thing to make things easier...
