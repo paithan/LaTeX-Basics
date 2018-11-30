@@ -148,9 +148,11 @@
 \newcommand{\tRightarrow}{\ensuremath{\Rightarrow\ }}
 \newcommand{\tRightarrowstar}{\ensuremath{\Rightarrow^*\ }}
 \newcommand{\code}[1]{\texttt{#1}}
-\newcommand{\codeBlock}[1]{\noindent\texttt{#1}}
+\newcommand{\codeSnippet}[1]{\noindent\texttt{#1}}
 \newcommand{\cindent}[0]{\phantom{XXXX}}
 \newcommand{\codeIndent}[0]{\cindent}
+\newcommand{\codeBlock}[2]{\vspace{.3cm}\noindent#1\\
+\noindent\framebox{\parbox[t]{\textwidth}{\texttt{#2}}}}
 
 % Commands for sexy matrices
 \newcommand{\kmatrix}[1]{\left[\begin{matrix} #1 \end{matrix}\right]}
