@@ -90,6 +90,7 @@
 %Complexity
 \newcommand{\cproblem}[1]{\ensuremath{\textsc{#1}}} %for a computational problem
 \newcommand{\cclass}[1]{\ensuremath{\mathord{\rm #1}}} %from Ben Hescott! :)
+\newcommand{\tmX}{\ensuremath{\times}} %Turing Machine 'x' for crossed-out spaces
 
 %% Linear Algebra Commands
 \newcommand{\rank}[1]{\mbox{rank}\ensuremath{\left( #1 \right)}}
@@ -153,6 +154,11 @@
 \newcommand{\codeIndent}[0]{\cindent}
 \newcommand{\codeBlock}[2]{\vspace{.3cm}\noindent#1\\
 \noindent\framebox{\parbox[t]{\textwidth}{\texttt{#2}}}}
+% From the accepted answer of https://tex.stackexchange.com/questions/50804/explicit-space-character
+\newcommand\Vtextvisiblespace[1][.3em]{%
+  \mbox{\kern.06em\vrule height.3ex}%
+  \vbox{\hrule width#1}%
+  \hbox{\vrule height.3ex}}
 
 % Commands for sexy matrices
 \newcommand{\kmatrix}[1]{\left[\begin{matrix} #1 \end{matrix}\right]}
