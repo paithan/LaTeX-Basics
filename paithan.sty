@@ -34,32 +34,34 @@
 
 
 
-%commands for my exams
-\newcommand{\blankSpace}[0]{\rule{30mm}{.4pt}}
 \newcommand{\visibleBlankSpace}{\texttt{\char32}}
-\newcommand{\trueFalseOptions}[0]{
- \begin{oneparchoices}
-  \choice True
-  \choice False
- \end{oneparchoices}}
-\newcommand{\blankToFillIn}[0]{\underline{\phantom{XXXXXXXXXXXXXXXXXXXX}}}
-\newenvironment{answerPage}{ %TODO: figure out how to use a parameter to determine the number of columns.
+
+
+%commands for my exams (I have them hard-coded into my exams file, so I don't need them here any longer.)
+%\newcommand{\blankSpace}[0]{\rule{30mm}{.4pt}}
+%\newcommand{\trueFalseOptions}[0]{
+% \begin{oneparchoices}
+%  \choice True
+%  \choice False
+% \end{oneparchoices}}
+%\newcommand{\blankToFillIn}[0]{\underline{\phantom{XXXXXXXXXXXXXXXXXXXX}}}
+%\newenvironment{answerPage}{ %TODO: figure out how to use a parameter to determine the number of columns.
   %\begin{flushleft}
   % {\large Printed Name:\rule{85mm}{.4pt}}
   %\end{flushleft}
   %\begin{center}
   % ``I affirm that my work upholds the highest standards of honesty and academic integrity at Wittenberg and that I have neither given nor received unauthorized assistance.''
   %\end{center}
-  \begin{flushleft}
-   {\large Name:\rule{85mm}{.4pt} and Date:\blankSpace}
-  \end{flushleft}
- \newpage
- \begin{multicols}{3}}{Go back and check!\end{multicols}\newpage}
-\newcommand{\answerSection}[1]{\textbf{#1}\newline}
-\newcommand{\answerSheetSpace}[2]{#1: \fbox{\phantom{\large{#2}}}
-\newline
-\phantom{#1:}$\downarrow$ \phantom{\fbox{\phantom{#2}}}
-\newline}
+%  \begin{flushleft}
+%   {\large Name:\rule{85mm}{.4pt} and Date:\blankSpace}
+%  \end{flushleft}
+% \newpage
+% \begin{multicols}{3}}{Go back and check!\end{multicols}\newpage}
+%\newcommand{\answerSection}[1]{\textbf{#1}\newline}
+%\newcommand{\answerSheetSpace}[2]{#1: \fbox{\phantom{\large{#2}}}
+%\newline
+%\phantom{#1:}$\downarrow$ \phantom{\fbox{\phantom{#2}}}
+%\newline}
 
 
 % miscellaneous commands I like to use
