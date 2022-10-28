@@ -3,6 +3,8 @@
 \usepackage{multido, ifthen} %arrays, etc, for the multiSlideItems command
 \usepackage{multicol}
 \usepackage{url}
+\usepackage{tikz}
+\usepackage{tikz-qtree}
 %\usepackage[hidelinks]{hyperref} %hyperref needs to come before cleveref, but you may need to import them again inside the actual document
 %\usepackage[capitalise,noabbrev]{cleveref}  %this is the one to use normally
 %\usepackage[capitalise]{cleveref} % This is the one for arXiv, since the noabbrev option doesn't exist there yet.  (They need to update their cleveref stuffz.)
@@ -10,9 +12,15 @@
 %if these do not load, do the following: copy the .sty files to /usr/share/texmf/tex/latex/ (you'll need to sudo) then run $ texhash in that directory
 \usepackage{algorithm, algpseudocode, algorithmicx}
 \algblock[Cobegin]{SimultaneouslyDo}{EndSimultaneous}
+\usepackage[outline]{contour} % for outlined text
+\usepackage{etoolbox} % allows use of the toggle variables
 
 
 \newcommand{\TODO}[1]{\large{\textbf{TODO}:} #1}
+
+
+ 
+ 
 
 
 %command for multi-slide lists in beamer
@@ -88,6 +96,52 @@
 %CGT
 \newcommand{\ruleset}[1]{\textsc{#1}}
 \newcommand{\outcomeClass}[1]{\ensuremath{\mathcal{#1}}}
+\newcommand{\outP}{\outcomeClass{P}}
+\newcommand{\outN}{\outcomeClass{N}}
+\newcommand{\outL}{\outcomeClass{L}}
+\newcommand{\outR}{\outcomeClass{R}}
+%Zero game
+\newcommand{\zeroGame}{\text{\Large 0}}
+%impartial game set notation
+\newcommand{\impartialGameSet}[1]{\ensuremath{{}^{*\!}\{\ #1\ \} }}
+%partisan set notation
+\newcommand{\gameSet}[2]{\ensuremath{\left\{\ #1\ \middle|\ #2\ \right\}}}
+
+
+% Confused with and not confused with
+\newcommand{\confused}{%command
+\ensuremath{\parallel}
+}
+
+\newcommand{\nconfused}{%command
+\ensuremath{\nparallel}
+}
+
+% Craig's less than or incomparable to
+\newcommand{\lessOrConfused}{%command
+\ensuremath{< \! \confused}%
+}
+
+
+\newcommand{\greaterOrConfused}{%command
+%\ensuremath{\mid \vartriangleright}
+%\ensuremath{\shortmid \vartriangleright}
+\ensuremath{\confused \! >}
+}
+
+\newcommand{\ngcw}{
+\ensuremath{\confused \! \ngtr}}
+
+\newcommand{\nlcw}{
+\ensuremath{\nless \! \confused}}
+
+%Kyle's commands for less or confused with and greater than or confused with
+\newcommand{\lcw}{\lessOrConfused}%{\triangleleft\!\shortmid}
+\newcommand{\gcw}{\greaterOrConfused}%{\shortmid\!\triangleright}
+
+
+
+
 
 %Complexity
 \newcommand{\cproblem}[1]{\ensuremath{\textsc{#1}}} %for a computational problem
@@ -165,3 +219,252 @@
 % Commands for sexy matrices
 \newcommand{\kmatrix}[1]{\left[\begin{matrix} #1 \end{matrix}\right]}
 
+
+%commands for QT trees:
+
+%includes a node for a QT-Tree that is "labelled" on the left.
+%usage: \qtLeftLabelNode{node}{label}
+\newcommand{\qtLeftLabelNode}[2]{%
+#2~#1~\phantom{#2}}
+
+\newcommand{\qtRightLabelNode}[2]{%
+\phantom{#2}~#1~#2}
+
+\newcommand{\qtBelowLabelNode}[2]{%
+%\node [label=below:{#2}] {#1};}
+#1\\{#2}} 
+
+
+\tikzstyle{impTreePos} = [draw,circle, fill,inner sep=2pt]
+  
+%tikz command to set up impartial trees (using tikz-qtree package)
+\newcommand{\impartialTreeTikzStyling}{%
+  %\tikzstyle{every node}=[draw, circle]
+  \tikzset{edge from parent/.style=
+    {draw,
+     edge from parent path={(\tikzparentnode.south)
+                            -- +(0,-8pt)
+                            -| (\tikzchildnode)}}}
+}
+
+%This version gives a tree with no vertex ids (a black circle is at each node)
+\newcommand{\impartialTreeTikzStylingNoIds}{%
+    \tikzstyle{every node}=[draw, fill, circle, inner sep=2pt]
+    \tikzset{sibling distance=15pt}
+    \tikzset{level distance=20pt}
+    \tikzset{edge from parent/.style=
+        {draw,
+        edge from parent path={(\tikzparentnode.south)
+                            -- +(0,-8pt)
+                            -| (\tikzchildnode)}}}
+}
+
+
+
+
+%Commands for specific games/rulesets:
+
+%counters used for strip/grid games (and likely more)
+\newcounter{StripCounter}
+\setcounter{StripCounter}{0}
+\newcounter{PrevStripCounter}
+\setcounter{PrevStripCounter}{0}
+\newcounter{RowCounter}
+\setcounter{RowCounter}{0}
+\newcounter{PrevRowCounter}
+\setcounter{PrevRowCounter}{0}
+\newcounter{ValCounter}
+\setcounter{ValCounter}{0}
+\newcounter{PrevValCounter}
+\setcounter{PrevValCounter}{0}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Arc Kayles
+\newcommand{\rsArcKayles}{\ruleset{Arc Kayles}}
+
+\newcommand{\arcKaylesPathGame}[2]{%
+    \def\numVertices{#2}%
+    \begin{tikzpicture}[scale=#1, baseline={([yshift=-.6ex]current bounding box.center)}]%
+        \node(node1)[circle, draw, fill=gray] at (1,0) {};
+        \setcounter{PrevStripCounter}{1}
+        \foreach \i in {2, ..., \numVertices} {%
+            \node(node\i)[circle, draw, fill=gray] at (\i,0) {};
+            \draw[-, line width=1pt] (node\thePrevStripCounter) edge (node\i);
+            \stepcounter{PrevStripCounter}
+        }%
+    \end{tikzpicture}%
+}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Col
+\newcommand{\rsCol}{\ruleset{Col}}
+
+%colStripGame{scale}{list of node colors}
+%usage example: \colStripGame{2}{0, 1, 0, -1} results in: Empty-Blue-Empty-Red with size twice the normal size.
+\newcommand{\colStripGame}[2]{%
+  \def\listOfColors{#2}
+  \setcounter{StripCounter}{0}
+  \setcounter{PrevStripCounter}{-1}
+  \begin{tikzpicture}[scale=#1, xscale=.5, baseline=-4pt]
+    \foreach \c in \listOfColors {
+      \node(\theStripCounter) [fill=\ifnumcomp{\c}{=}{1}{blue}{\ifnumcomp{\c}{=}{0}{white}{red}}, circle, draw] at (\theStripCounter, 0) {}; 
+      \ifnumcomp{\thePrevStripCounter}{>}{-1}{%
+        \draw[-, line width=1pt] (\thePrevStripCounter) edge (\theStripCounter);
+      }{}
+      \stepcounter{StripCounter} 
+      \stepcounter{PrevStripCounter}
+    }
+  \end{tikzpicture}
+}
+
+%for checking whether shapes are defined in a tikz image
+%answer from: https://tex.stackexchange.com/questions/85528/checking-whether-or-not-a-node-has-been-previously-defined (Jake's answer, which is derived from Martin Scharrer's answer on a linked thread)
+\makeatletter
+\long\def\ifnodedefined#1#2#3{%
+    \@ifundefined{pgf@sh@ns@#1}{#3}{#2}%
+}
+\makeatother
+%TODO: it's not working below!
+
+
+%usage: \colGame{scale}{{1,0,-1},{1,0,-1},...}
+\newcommand{\colGame}[2]{%
+  \def\listOfRows{#2}
+  \setcounter{RowCounter}{0}
+  \setcounter{PrevRowCounter}{-1}
+  \begin{tikzpicture}[scale=#1, baseline=(current bounding box.center)]
+    \foreach \listOfVals in \listOfRows {
+    	\setcounter{ValCounter}{0}
+        \setcounter{PrevValCounter}{-1}
+            \foreach \c in \listOfVals{
+                %\draw[xstep = 1cm, ystep=1cm, black]
+                %    (\theValCounter,-\theRowCounter) rectangle (\theValCounter+1,-\theRowCounter-1);
+                \node(\theRowCounter9x\theValCounter) [fill=\ifnumcomp{\c}{=}{1}{blue}{\ifnumcomp{\c}{=}{0}{white}{red}}, circle, scale=2*#1, draw] at (\theValCounter+0.5, -\theRowCounter-0.5) {};
+                
+                %if a node to the left exists, connect it to this
+                \ifnodedefined{\theRowCounter9x\thePrevValCounter}{\draw[-] (\theRowCounter9x\thePrevValCounter) edge (\theRowCounter9x\theValCounter);}{}
+                
+                %if a node above exists, connect it to this
+                \ifnodedefined{\thePrevRowCounter9x\theValCounter}{\draw[-] (\thePrevRowCounter9x\theValCounter) edge (\theRowCounter9x\theValCounter);}{}
+                
+                \stepcounter{ValCounter}
+                \stepcounter{PrevValCounter}
+            }
+        \stepcounter{RowCounter} 
+        \stepcounter{PrevRowCounter}
+    }
+  \end{tikzpicture}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Kayles
+\newcommand{\rsKayles}{\ruleset{Kayles}}
+
+%%%%%% Commented out because it doesn't work without pin2, from the book
+%instances of positions:
+%\newcommand{\kaylesGame}[1]{
+%  \hspace{-.2cm}
+%  \ensuremath{
+%  \begin{array}{l}
+%    \def\listOfGroups{#1}
+%    \foreach \group in \listOfGroups {
+%      \foreach \groupIndex in {1, ..., \group} {
+%        \xusebox{pin2}%\hspace{-.05cm}
+%      }
+%      \hspace{.45cm}
+%    }
+%    %\hspace{-.75cm}
+%  \end{array}}
+%  \hspace{-.185cm}
+%}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Konane
+\newcommand{\rsKonane}{\ruleset{Konane}}
+
+%Konane
+%usage: \konaneGame{scale}{{1,0,-1},{1,0,-1},...}
+\newcommand{\konaneGame}[2]{%
+  \def\listOfRows{#2}
+  \setcounter{RowCounter}{0}
+  \setcounter{PrevRowCounter}{-1}
+  \begin{tikzpicture}[scale=#1, baseline=(current bounding box.center)]
+    \foreach \listOfVals in \listOfRows {
+    	\setcounter{ValCounter}{0}
+	\setcounter{PrevValCounter}{-1}
+    	\foreach \c in \listOfVals{
+  	  	\draw[xstep = 1cm, ystep=1cm, black]
+    		(\theValCounter,-\theRowCounter) rectangle (\theValCounter+1,-\theRowCounter-1);
+		\node(\theValCounter) [fill=\ifnumcomp{\c}{=}{1}{black}{\ifnumcomp{\c}{=}{0}{none}{white}}, circle, scale=2*#1, draw, opacity=\ifnumcomp{\c}{=}{0}{0}{1}] at (\theValCounter+0.5, -\theRowCounter-0.5) {}; 
+		\stepcounter{ValCounter}
+		\stepcounter{PrevValCounter}
+		}
+	  \stepcounter{RowCounter} 
+	  \stepcounter{PrevRowCounter}
+    	}
+  \end{tikzpicture}
+}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Subtraction %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\rsSubtract}{\ruleset{Subtraction}}
+
+%usage \subtractionGameWithSet{5}{1,2,3}
+\newcommand{\subtractionGameWithSet}[2]{%
+%  \ensuremath{\underset{\{#2\}}{\subtractionGame{#1}}}
+  \ensuremath{%
+    \underset{\{#2\}} 
+             {\scalebox{1.5}{\textcolor{white}{\contour{black}{#1}}}}}
+}
+
+%usage \subtractionGameWithSetNoBraces{5}{S}
+\newcommand{\subtractionGameWithSetNoBraces}[2]{%
+%  \ensuremath{\underset{\{#2\}}{\subtractionGame{#1}}}
+  \ensuremath{%
+    \underset{#2} 
+             {\scalebox{1.5}{\textcolor{white}{\contour{black}{#1}}}}}
+}
+
+% simpler subtraction game
+% I renamed the first just for testing
+\newcommand{\subtractionGame}[1]{
+  {\Large \color{white} \contour{black}{#1}}
+}
+
+%the same as the above, but with only one parameter.
+%\newcommand{\subtractionGameX}[1]{%
+%  \subtractionGame{#1}{}
+%}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Toppling Dominoes %%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\rsTopplingDominoes}{\ruleset{Toppling Dominoes}}
+
+
+%\tikzstyle{domino} = [draw, rectangle, minimum width=.1cm, minimum height=.8cm]
+\tikzset{domino/.style={draw, rectangle, minimum width=.1cm, minimum height=.8cm}}
+
+%topplingDominoesStripGame{scale}{colors}
+\newcommand{\topplingDominoesStripGame}[2]{%
+    \def\listOfColors{#2}%
+    \setcounter{StripCounter}{0}%
+    %\setcounter{PrevStripCounter}{-1}
+    \begin{tikzpicture}[scale=#1, xscale=.5, baseline=-5pt]
+        \foreach \c in \listOfColors {%
+            \def\colorThisTime{\ifnumcomp{\c}{=}{1}{blue}{\ifnumcomp{\c}{=}{0}{green}{red}}}%
+            \node(\theStripCounter) [fill=\colorThisTime, color=\colorThisTime, domino] at (\theStripCounter, 0) {};%
+            \stepcounter{StripCounter}%
+            %\stepcounter{PrevStripCounter}
+        }%
+    \end{tikzpicture}%
+}
+
+
+
+
+
+
+\newcommand{\rsNim}{\ruleset{Nim}}
