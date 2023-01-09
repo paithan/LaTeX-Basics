@@ -297,6 +297,35 @@
 
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Clobber
+
+%Clobber
+\newcommand{\rsClobber}{\ruleset{Clobber}}
+
+%Clobber
+%usage: \clobberGame{scale}{{1,0,-1},{1,0,-1}...}
+\newcommand{\clobberGame}[2]{%
+  \def\listOfRows{#2}
+  \setcounter{RowCounter}{0}
+  \setcounter{PrevRowCounter}{-1}
+  \begin{tikzpicture}[scale=#1, baseline=(current bounding box.center)]]
+    \foreach \listOfVals in \listOfRows {
+    	\setcounter{ValCounter}{0}
+	\setcounter{PrevValCounter}{-1}
+    	\foreach \c in \listOfVals{
+  	  	\draw[xstep = 1cm, ystep=1cm, black]
+    		(\theValCounter,-\theRowCounter) rectangle (\theValCounter+1,-\theRowCounter-1);
+		\node(\theValCounter) [fill=\ifnumcomp{\c}{=}{1}{blue}{\ifnumcomp{\c}{=}{0}{none}{red}}, circle, draw=none,scale=2*#1] at (\theValCounter+0.5, -\theRowCounter-0.5) {}; 
+		\stepcounter{ValCounter}
+		\stepcounter{PrevValCounter}
+		}
+	  \stepcounter{RowCounter} 
+	  \stepcounter{PrevRowCounter}
+    	}
+  \end{tikzpicture}
+}
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Col
 \newcommand{\rsCol}{\ruleset{Col}}
 
@@ -306,7 +335,8 @@
   \def\listOfColors{#2}
   \setcounter{StripCounter}{0}
   \setcounter{PrevStripCounter}{-1}
-  \begin{tikzpicture}[scale=#1, xscale=.5, baseline=-4pt]
+  %\begin{tikzpicture}[scale=#1, xscale=.5, baseline=(current bounding box.center)]
+  \begin{tikzpicture}[scale=#1, baseline=(current bounding box.center)]
     \foreach \c in \listOfColors {
       \node(\theStripCounter) [fill=\ifnumcomp{\c}{=}{1}{blue}{\ifnumcomp{\c}{=}{0}{white}{red}}, circle, draw] at (\theStripCounter, 0) {}; 
       \ifnumcomp{\thePrevStripCounter}{>}{-1}{%
