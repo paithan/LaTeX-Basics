@@ -3,6 +3,7 @@
 \usepackage{multido, ifthen} %arrays, etc, for the multiSlideItems command
 \usepackage{multicol}
 \usepackage{url}
+\usepackage{xfrac}
 \usepackage{tikz}
 \usepackage{tikz-qtree}
 %\usepackage[hidelinks]{hyperref} %hyperref needs to come before cleveref, but you may need to import them again inside the actual document
@@ -12,6 +13,8 @@
 %if these do not load, do the following: copy the .sty files to /usr/share/texmf/tex/latex/ (you'll need to sudo) then run $ texhash in that directory
 \usepackage{algorithm, algpseudocode, algorithmicx}
 \algblock[Cobegin]{SimultaneouslyDo}{EndSimultaneous}
+\algblock[simulDo]{SimultDo}{EndDo}
+\algblock[simulDo2]{DoSimult}{EndDo}
 \usepackage[outline]{contour} % for outlined text
 \usepackage{etoolbox} % allows use of the toggle variables
 
@@ -139,13 +142,23 @@
 \newcommand{\lcw}{\lessOrConfused}%{\triangleleft\!\shortmid}
 \newcommand{\gcw}{\greaterOrConfused}%{\shortmid\!\triangleright}
 
+\newcommand{\tdtd}[1]{#1\ensuremath{^{\text{TT}}}} %TODO: make this a link?? 
+
+\newcommand{\tweedle}{Tweedledum-Tweedledee}
+
+\newcommand{\countInteger}[1]{#1\ensuremath{^{\mbox{\large \#}}}}
+
+\newcommand{\qtTTNode}[1]{%
+  \qtBelowLabelNode{#1}{\tdtd{\outP}}
+}
+
 
 
 
 
 %Complexity
 \newcommand{\cproblem}[1]{\ensuremath{\textsc{#1}}} %for a computational problem
-\newcommand{\cclass}[1]{\ensuremath{\mathord{\rm #1}}} %from Ben Hescott! :)
+\newcommand{\cclass}[1]{\ensuremath{\mathord{\textrm{#1}}}} %from Ben Hescott! :)
 \newcommand{\tmX}{\ensuremath{\times}} %Turing Machine 'x' for crossed-out spaces
 
 %% Linear Algebra Commands
@@ -171,6 +184,31 @@
 \newcommand{\Lim}{\displaystyle\lim}
 \newcommand{\Argmin}{\displaystyle\argmin}
 \newcommand{\Argmax}{\displaystyle\argmax}
+
+
+%nice circled numbers.  With code from the top solution listed in this Stackexchange answer: https://tex.stackexchange.com/a/8473/22649
+\newcommand{\circleNumber}[1]{\raisebox{.5pt}{\textcircled{\raisebox{-.9pt} {#1}}}}
+
+
+
+%useful commands
+\newcommand{\maxWParens}[1]{\maxOf{#1}}
+\newcommand{\maxOf}[1]{\max\left(#1\right)}
+\newcommand{\minOf}[1]{\min\left(#1\right)}
+\newcommand{\ThetaOf}[1]{\Theta\left(#1\right)}
+\newcommand{\BigOOf}[1]{O\left(#1\right)}
+\newcommand{\OmegaOf}[1]{\Omega\left(#1\right)}
+
+
+%For algorithms
+\newcommand{\paitAlgorithm}[4]{\noindent Algorithm: \code{#1}\\
+  \noindent Input: #2\\
+  \noindent Output: #3
+  \begin{algorithmic}[1] #4 \end{algorithmic}}
+  
+  
+\newcommand{\AlgoForAll}[1]{\For{\textbf{all} #1}}
+
 
 %commands for theorem environments
 %\theoremstyle{definition} \newtheorem{definition}{Definition}[section]
@@ -204,7 +242,7 @@
 \newcommand{\trightarrow}{\ensuremath{\rightarrow\ }}
 \newcommand{\tRightarrow}{\ensuremath{\Rightarrow\ }}
 \newcommand{\tRightarrowstar}{\ensuremath{\Rightarrow^*\ }}
-\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\code}[1]{\noindent\texttt{#1}}
 \newcommand{\codeSnippet}[1]{\noindent\texttt{#1}}
 \newcommand{\cindent}[0]{\phantom{XXXX}}
 \newcommand{\codeIndent}[0]{\cindent}
@@ -232,7 +270,11 @@
 
 \newcommand{\qtBelowLabelNode}[2]{%
 %\node [label=below:{#2}] {#1};}
-#1\\{#2}} 
+#1\\{#2}}
+
+%\impartialTreeNodeWithLabel{node}{label}{direction} (direction is above, below, left, or right)
+\newcommand{\impartialTreeNodeWithLabel}[3]{%
+\node [label=#3:{#2}] {#1}; }
 
 
 \tikzstyle{impTreePos} = [draw,circle, fill,inner sep=2pt]
@@ -262,6 +304,8 @@
 
 
 
+\newcommand{\rsBCL}{\ruleset{B2CL}}
+
 %Commands for specific games/rulesets:
 
 %counters used for strip/grid games (and likely more)
@@ -278,19 +322,26 @@
 \newcounter{PrevValCounter}
 \setcounter{PrevValCounter}{0}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Tafl and Variants
+
+\newcommand{\rsTafl}{\ruleset{Hnefatafl}}
+\newcommand{\rsFCT}{\ruleset{Forced-Capture Hnefatafl}}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Arc Kayles
 \newcommand{\rsArcKayles}{\ruleset{Arc Kayles}}
 
 \newcommand{\arcKaylesPathGame}[2]{%
     \def\numVertices{#2}%
-    \begin{tikzpicture}[scale=#1, baseline={([yshift=-.6ex]current bounding box.center)}]%
+    \begin{tikzpicture}[scale=#1, baseline={([yshift=-.3ex]current bounding box.center)}]%
         \node(node1)[circle, draw, fill=gray] at (1,0) {};
-        \setcounter{PrevStripCounter}{1}
-        \foreach \i in {2, ..., \numVertices} {%
-            \node(node\i)[circle, draw, fill=gray] at (\i,0) {};
-            \draw[-, line width=1pt] (node\thePrevStripCounter) edge (node\i);
-            \stepcounter{PrevStripCounter}
-        }%
+        \ifnumcomp{\numVertices}{>}{1}{%
+            \setcounter{PrevStripCounter}{1}
+            \foreach \i in {2, ..., \numVertices} {%
+                \node(node\i)[circle, draw, fill=gray] at (\i,0) {};
+                \draw[-, line width=1pt] (node\thePrevStripCounter) edge (node\i);
+                \stepcounter{PrevStripCounter}
+            }%
+        }{}
     \end{tikzpicture}%
 }
 
@@ -465,9 +516,9 @@
 }
 
 %the same as the above, but with only one parameter.
-%\newcommand{\subtractionGameX}[1]{%
-%  \subtractionGame{#1}{}
-%}
+\newcommand{\subtractionGameX}[1]{%
+  \subtractionGame{#1}{}
+}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Toppling Dominoes %%%%%%%%%%%%%%%%%%%%%%%%%%
